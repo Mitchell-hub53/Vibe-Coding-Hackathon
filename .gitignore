@@ -1,0 +1,26 @@
+# Project-level ignores
+node_modules/
+dist/
+.DS_Store
+.env
+.env.*
+*.pyc
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+.mypy_cache/
+.coverage
+coverage.xml
+/.idea/
+/.vscode/
+/.cache/
+
+# Frontend
+/workspace/frontend/node_modules/
+/workspace/frontend/dist/
+
+# Backend
+/workspace/backend/.env
+/workspace/backend/.venv/
+/workspace/backend/alembic/versions/
