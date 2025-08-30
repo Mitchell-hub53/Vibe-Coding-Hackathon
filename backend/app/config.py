@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from typing import Optional
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
@@ -13,6 +14,7 @@ class Settings(BaseSettings):
 	access_token_expire_minutes: int = 60 * 24
 
 	# Databases
+	database_url: Optional[str] = None
 	mysql_user: str = "safiri"
 	mysql_password: str = "safiri"
 	mysql_host: str = "mysql"
@@ -35,12 +37,21 @@ class Settings(BaseSettings):
 		"http://localhost:3000",
 	]
 
+	@field_validator("cors_origins", mode="before")
+	@classmethod
+	def parse_cors(cls, v):
+		if isinstance(v, str):
+			return [o.strip() for o in v.split(",") if o.strip()]
+		return v
+
 	class Config:
 		env_file = ".env"
 		env_file_encoding = "utf-8"
 
 	@property
 	def sqlalchemy_database_uri(self) -> str:
+		if self.database_url:
+			return self.database_url
 		return (
 			f"mysql+pymysql://{self.mysql_user}:{self.mysql_password}@{self.mysql_host}:{self.mysql_port}/{self.mysql_db}"
 		)
